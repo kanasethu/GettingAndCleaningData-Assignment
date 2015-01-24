@@ -1,23 +1,91 @@
-# GettingAndCleaningData-Assignment
+## Summary
+This analysis downloaded data from :
+     https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+     on January 24, 2015
 
-The purpose of this project is to demonstrate your ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis. You will be graded by your peers on a series of yes/no questions related to the project.
+This data was obtained from:
+     http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
-You will be required to submit:
-1. a tidy data set as described below,
-2. link to a Github repository with your script for performing the analysis, and
-3. code book that describes the variables, the data, and any transformations or work that you performed to clean up the data called CodeBook.md. You should also include a README.md in the repo with your scripts. This repo explains how all of the scripts work and how they are connected.  
 
-One of the most exciting areas in all of data science right now is wearable computing - see for example this article . Companies like Fitbit, Nike, and Jawbone Up are racing to develop the most advanced algorithms to attract new users. The data linked to from the course website represent data collected from the accelerometers from the Samsung Galaxy S smartphone. A full description is available at the site where the data was obtained: 
+## Data Set Informatiom
+The original experiment was carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, 3-axial linear acceleration and 3-axial angular velocity was captured at a constant rate of 50Hz. The experiments were video-recorded to label the data manually. The obtained dataset was been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data.
 
-http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones 
+This analysis:
+- merges the training and test data
+  - read `X_train.txt`, `y_train.txt` and `subject_train.txt` from the "./train" folder
+  - read `X_test.txt`, `y_test.txt` and `subject_test.txt` from the "./test" folder
+  - `join` the six data sets into three: `joinData`, `joinLabel` and `joinSubject`
+- `joinData` has 561 columns corresponding to 561 variables and 10299 rows/observations.  Pare this down to the 66 variables which store information on Means and StandardDeviation (`features.txt` was consulted for variable names).
+- columns of joinData was named using data from `features.txt`.  column names were cleaned to remove "_" and "()"
+- read `activity_labels.txt` and change joinLabel to store descriptive activity names intsead of numbers.
+- combine `joinSubject`, `joinLabel` and `joinData` into one single data frame called `tidyData`.  `tidyData` is a data Frame of dimension `10299x68`.  The first columns stores subject data, the second indicates the activity name and the remaining 66 columns store the following Means and StandardDeviation informatiion.
+  - "tBodyAccmeanX"
+  - "tBodyAccmeanY"
+  - "tBodyAccmeanZ"
+  - "tBodyAccstdX"
+  - "tBodyAccstdY"
+  - "tBodyAccstdZ"
+  - "tGravityAccmeanX"
+  - "tGravityAccmeanY"
+  - "tGravityAccmeanZ"
+  - "tGravityAccstdX"
+  - "tGravityAccstdY"
+  - "tGravityAccstdZ"
+  - "tBodyAccJerkmeanX"
+  - "tBodyAccJerkmeanY"
+  - "tBodyAccJerkmeanZ"
+  - "tBodyAccJerkstdX"
+  - "tBodyAccJerkstdY"
+  - "tBodyAccJerkstdZ"
+  - "tBodyGyromeanX"
+  - "tBodyGyromeanY"
+  - "tBodyGyromeanZ"
+  - "tBodyGyrostdX"
+  - "tBodyGyrostdY"
+  - "tBodyGyrostdZ"
+  - "tBodyGyroJerkmeanX"
+  - "tBodyGyroJerkmeanY"
+  - "tBodyGyroJerkmeanZ"
+  - "tBodyGyroJerkstdX"
+  - "tBodyGyroJerkstdY"
+  - "tBodyGyroJerkstdZ"
+  - "tBodyAccMagmean"
+  - "tBodyAccMagstd"
+  - "tGravityAccMagmean"
+  - "tGravityAccMagstd"
+  - "tBodyAccJerkMagmean"
+  - "tBodyAccJerkMagstd"
+  - "tBodyGyroMagmean"
+  - "tBodyGyroMagstd"
+  - "tBodyGyroJerkMagmean"
+  - "tBodyGyroJerkMagstd"
+  - "fBodyAccmeanX"
+  - "fBodyAccmeanY"
+  - "fBodyAccmeanZ"
+  - "fBodyAccstdX"
+  - "fBodyAccstdY"
+  - "fBodyAccstdZ"
+  - "fBodyAccJerkmeanX"
+  - "fBodyAccJerkmeanY"
+  - "fBodyAccJerkmeanZ"
+  - "fBodyAccJerkstdX"
+  - "fBodyAccJerkstdY"
+  - "fBodyAccJerkstdZ"
+  - "fBodyGyromeanX"
+  - "fBodyGyromeanY"
+  - "fBodyGyromeanZ"
+  - "fBodyGyrostdX"
+  - "fBodyGyrostdY"
+  - "fBodyGyrostdZ"
+  - "fBodyAccMagmean"
+  - "fBodyAccMagstd"
+  - "fBodyBodyAccJerkMagmean"
+  - "fBodyBodyAccJerkMagstd"
+  - "fBodyBodyGyroMagmean"
+  - "fBodyBodyGyroMagstd"
+  - "fBodyBodyGyroJerkMagmean"
+  - "fBodyBodyGyroJerkMagstd"
+- `tidyData` is written into a file `tidyData.txt` and can be read using the command `read.table("tidyData.txt")`
+- finally, the `dplyr` package is used to calculate means of each column by subject and activity and store this in a dplyr table `data_means`.
+- `data_means` is written into a file `tidyDataMeans.txt` and can be read using the command `read.table("tidyDataMeans.txt")`
 
-Here are the data for the project: 
-
-https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
-
-You should create one R script called run_analysis.R that does the following. 
--   Merges the training and the test sets to create one data set.
--   Extracts only the measurements on the mean and standard deviation for each measurement. 
--   Uses descriptive activity names to name the activities in the data set
--   Appropriately labels the data set with descriptive variable names. 
--   From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
