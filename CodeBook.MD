@@ -85,7 +85,7 @@ This analysis:
   - "fBodyBodyGyroMagstd"
   - "fBodyBodyGyroJerkMagmean"
   - "fBodyBodyGyroJerkMagstd"
-- finally, the `dplyr` package to calculate means of each column by subject and activity and store this in a dplyr table data_means.
-
-
+- `tidyData` is written into a file `tidyData.txt` and can be read using the command `read.table("tidyData.txt")`
+- finally, the `dplyr` package to calculate means of each column by subject and activity and store this in a dplyr table `data_means`.
+- `data_means` is written into a file `tidyDataMeans.txt` and can be read using the command `read.table("tidyDataMeans.txt")`
 
